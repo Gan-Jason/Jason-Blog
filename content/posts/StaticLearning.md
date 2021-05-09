@@ -37,13 +37,13 @@ author: "Jason·Gan"
 * 测试用例：  
 ```
 
-public class StaticLearning {
-    public static void main(String[] args) {
-        new Child();
-    }
+ class StaticLearning {
+
     static{
         System.out.println("父类---静态代码块");
     }
+    private static int p=10;
+
     {
         System.out.println("父类---非静态代码块");
     }
@@ -52,7 +52,11 @@ public class StaticLearning {
     }
 }
 
-class Child extends StaticLearning{
+public class Child extends StaticLearning{
+    public static void main(String[] args) {
+        Child c=new Child();
+        c.say();
+    }
     static{
         System.out.println("子类---静态代码块");
 
@@ -63,24 +67,33 @@ class Child extends StaticLearning{
     Child(){
         System.out.println("子类---构造函数");
     }
+    void say(){
+        System.out.println("I'm child");
+    }
 
 }  
 ```  
 
 * 可以先思考一下，输出结果是怎么样的，这个输出结果即是JVM运行时，对类的操作动态  
-* 运行结果，如下图：  
-![](/image/staticLearning/1.jpg)  
-
+* 运行结果，如下：  
+父类---静态代码块
+子类---静态代码块
+父类---非静态代码块
+父类---构造函数
+子类---非静态代码块
+子类---构造函数
+I'm child
 ---  
 * 结果表明：  
-* 1. 类加载时，先加载父类的静态代码块并只运行一次  
-* 2. 再加载子类的静态代码块并只运行一次
-* 3. 再初始化父类非静态代码块  
+* 1. 类加载时，先找入口函数，并加载其父类（若没有则跳过此步骤）的静态成员（代码块或者域）并只运行一次  
+* 2. 再加载子类的静态成员并只运行一次
+* 3. 再初始化父类非静态成员  
 * 4. 再初始化父类的构造函数  
 * 5. 在初始化子类的非静态代码块  
 * 6. 最后初始化子类的构造函数  
 
-最后，其实静态代码块不是一定在非静态代码块前运行，因为如果同时静态代码块的话，按顺序先后加载，但是如果是在静态块或者静态成员里加载了非静态的成员的话，非静态成员就可以先初始化了。  
+最后，其实静态代码块不是一定在非静态代码块前运行，如果是在静态块或者静态成员里加载了非静态的成员的话，非静态成员就可以先初始化了。
+如果同时静态代码块的话，按顺序先后加载。
 
 
   
